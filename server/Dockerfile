@@ -6,3 +6,6 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 COPY crontab /var/spool/cron/crontabs/root
+COPY . .
+
+CMD crond && python run.py

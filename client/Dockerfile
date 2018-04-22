@@ -9,4 +9,4 @@ RUN yarn install
 
 ENV REACT_APP_WEB_API_SERVER "$REACT_APP_WEB_API_SERVER"
 COPY . .
-RUN yarn run build-css && yarn run build
+RUN yarn run build
