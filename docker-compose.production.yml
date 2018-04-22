@@ -1,0 +1,21 @@
+version: "3"
+
+services:
+  client:
+    build:
+      context: ./client
+      args:
+        REACT_APP_WEB_API_SERVER: http://localhost:23360/v1.0
+    ports:
+      - "23361:3000"
+    volumes:
+      - "./client:/app"
+    command: serve -s build -c 0
+
+  api:
+    build: ./server
+    ports:
+      - "23360:23360"
+    volumes:
+      - "./server-python:/app"
+    command: crond && python run.py

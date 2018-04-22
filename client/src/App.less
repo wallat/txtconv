@@ -1,0 +1,67 @@
+body {
+	background-color: #EFEFEF;
+	min-height: 100vh;
+}
+
+.App {
+	.container {
+		max-width: 960px;
+	}
+
+	.file-row {
+		padding: 0.5rem 2rem;
+
+	}
+
+	.dropzone-panel {
+		margin-bottom: 1rem;
+
+		.dropzone-nornaml{
+			border: 5px dashed hsl(171, 100%, 41%);
+			padding: 1rem 2rem;
+			font-size: 1.5rem;
+			color: hsl(171, 100%, 41%);
+			cursor: pointer;
+			border-radius: 4px;
+		}
+
+		.dropzone-active {
+			border-color: hsl(141, 71%, 48%);
+			color: hsl(141, 71%, 48%);
+		}
+	}
+
+	.file-status {
+		border: 1px solid #999;
+		border-width: 0 0 1px 0;
+
+		&:first-child {
+			border-width: 1px 0 1px 0;
+		}
+
+		.main-infos {
+			flex: 1;
+		}
+		.controls {
+			align-items: center;
+			min-width: 3rem;
+			justify-content: center;
+
+			progress {
+				min-width: 3rem;
+			}
+
+
+			font-size: 2rem;
+
+		}
+	}
+}
+
+.footer {
+	color: #888;
+	font-size: 14px;
+	text-align: center;
+	// margin: 10px;
+	background-color: transparent;
+}

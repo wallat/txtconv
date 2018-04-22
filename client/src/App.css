@@ -1,0 +1,50 @@
+body {
+  background-color: #EFEFEF;
+  min-height: 100vh;
+}
+.App .container {
+  max-width: 960px;
+}
+.App .file-row {
+  padding: 0.5rem 2rem;
+}
+.App .dropzone-panel {
+  margin-bottom: 1rem;
+}
+.App .dropzone-panel .dropzone-nornaml {
+  border: 5px dashed #00d1b2;
+  padding: 1rem 2rem;
+  font-size: 1.5rem;
+  color: #00d1b2;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.App .dropzone-panel .dropzone-active {
+  border-color: #23d160;
+  color: #23d160;
+}
+.App .file-status {
+  border: 1px solid #999;
+  border-width: 0 0 1px 0;
+}
+.App .file-status:first-child {
+  border-width: 1px 0 1px 0;
+}
+.App .file-status .main-infos {
+  flex: 1;
+}
+.App .file-status .controls {
+  align-items: center;
+  min-width: 3rem;
+  justify-content: center;
+  font-size: 2rem;
+}
+.App .file-status .controls progress {
+  min-width: 3rem;
+}
+.footer {
+  color: #888;
+  font-size: 14px;
+  text-align: center;
+  background-color: transparent;
+}

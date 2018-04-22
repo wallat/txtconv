@@ -1,0 +1,6 @@
+pymongo==3.5.0
+Werkzeug==0.12.2
+Flask==0.12
+requests==2.18.4
+opencc-python-reimplemented
+chardet
