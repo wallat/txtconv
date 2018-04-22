@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, Response, send_from_directory, url_for
+from flask import Flask, jsonify, request, Response, send_from_directory, url_for, make_response, send_file
 from xai import app
 import json
 import requests
@@ -7,6 +7,7 @@ import os
 import datetime
 import logging
 import chardet
+from urllib.parse import quote
 from werkzeug.utils import secure_filename
 from opencc import OpenCC
 
@@ -71,4 +72,14 @@ def conv():
 @app.route("/"+app.config['API_VERSION']+"/static_file/<path:filename>", methods=['GET'])
 def static_file(filename):
 	""" Serve the static file from upload folder"""
-	return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
+	# return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
+	path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+	response = make_response(send_file(path))
+	basename = os.path.basename(path)
+	response.headers["Content-Disposition"] = \
+	    "attachment;" \
+	    "filename*=UTF-8''{utf_filename}".format(
+	        utf_filename=quote(basename.encode('utf-8'))
+	    )
+
+	return response

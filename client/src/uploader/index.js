@@ -18,7 +18,7 @@ export default observer(class extends Component {
 					onDrop={this.onDrop.bind(this)}
 					className="dropzone-nornaml"
 					activeClassName="dropzone-active">
-					<p>上傳檔案</p>
+					<p>上傳檔案，支援 txt, csv, srt, ...</p>
 				</Dropzone>
 			</div>
 		);
