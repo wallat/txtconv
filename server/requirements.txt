@@ -1,4 +1,4 @@
-Werkzeug==0.12.2
+Werkzeug
 Flask
 requests==2.18.4
 opencc-python-reimplemented
