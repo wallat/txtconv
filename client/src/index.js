@@ -8,7 +8,8 @@ import {FileQueue, FileHandler} from './Store'
 
 // load global configs
 window.CONFS = {
-	apiServer: process.env.REACT_APP_WEB_API_SERVER || "http://localhost:23360/v1.0"
+	apiServer: process.env.REACT_APP_WEB_API_SERVER || "http://localhost:23360/v1.0",
+	wsServer: process.env.REACT_APP_WEB_API_SERVER || "ws://localhost:23360/v1.0",
 }
 
 // init store

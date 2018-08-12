@@ -6,6 +6,7 @@ services:
       context: ./client
       args:
         REACT_APP_WEB_API_SERVER: https://txtconv-api.arpuli.com/v1.0
+        REACT_APP_WS_API_SERVER: wss://txtconv-api.arpuli.com/v1.0
     restart: always
     ports:
       - "23361:5000"

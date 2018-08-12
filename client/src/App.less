@@ -46,14 +46,23 @@ body {
 			align-items: center;
 			min-width: 3rem;
 			justify-content: center;
-
-			progress {
-				min-width: 3rem;
-			}
-
-
 			font-size: 2rem;
 
+			.control-msg-progress {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+
+				.status-msg {
+					font-size: 1rem;
+				}
+
+				progress {
+					min-width: 3rem;
+					margin-bottom: 0;
+				}
+			}
 		}
 	}
 }

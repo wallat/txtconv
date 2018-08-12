@@ -35,9 +35,21 @@ const FileRow = observer(class extends Component {
               </div>
               <div className="is-flex controls">
                 {store.isUploading!==false &&
-                  <div><progress className="progress" value={store.progress} max="100"></progress></div>}
-                {store.isUploading===false && store.isProcessing &&
-                  <span><i className="fa fa-spinner fa-spin"></i></span>}
+                  <div className="control-msg-progress">
+                    <progress className="progress" value={store.uploadProgress} max="100"></progress>
+                    <div className="status-msg">上傳中</div>
+                  </div>}
+                {store.isUploading===false && store.isProcessing===false && store.downloadLink===null &&
+                  <div className="control-msg-progress">
+                    <span><i className="fa fa-spinner fa-spin"></i></span>
+                  </div>
+                }
+                {store.isProcessing!==false &&
+                  <div className="control-msg-progress">
+                    <progress className="progress" value={store.convertProgress} max="1"></progress>
+                    <div className="status-msg">轉換中</div>
+                  </div>
+                }
                 {store.downloadLink &&
                   <a href={store.downloadLink} target="_blank">
                     <i className="fa fa-download"></i>

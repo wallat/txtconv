@@ -6,7 +6,8 @@ class FileHandler {
 			file: file,
 			filename: file ? file.name : '',
 			size: file ? file.size : '',
-			progress: 0,
+			uploadProgress: 0,
+			convertProgress: 0,
 			downloadLink: null,
 			isUploading: false,
 			isProcessing: false,
@@ -15,7 +16,13 @@ class FileHandler {
 	}
 
 	/**
-	 * Upload the file to server
+	 * Upload the file to server.
+	 * We use AJAX to uplaod a file for these reasons:
+	 *
+	 * 1. Simple websocket cannot get the progress
+	 * 2. It's more easy.
+	 *
+	 *
 	 * @return {}
 	 */
 	upload () {
@@ -32,7 +39,7 @@ class FileHandler {
 			this.isUploading = true;
 			if (event.lengthComputable) {
 				let complete = (event.loaded / event.total * 100 | 0);
-				this.progress = complete;
+				this.uploadProgress = complete;
 			}
 		}
 
@@ -41,13 +48,12 @@ class FileHandler {
 		}
 
 		xhr.onload = () => {
-			this.progress = 100;
+			this.uploadProgress = 100;
 			this.isProcessing = false;
 			this.isUploading = false;
 
 			if (xhr.status===200) {
-				var response = JSON.parse(xhr.responseText);
-				this.onFileLoaded(response)
+				this.notifyServerShouldConvert()
 			} else {
 				this.errMessage = 'Something wrong';
 			}
@@ -75,12 +81,80 @@ class FileHandler {
 		xhr.send(formData);
 	}
 
-	onFileLoaded (response) {
-		if (response.status==='OK') {
-			this.downloadLink = window.CONFS.apiServer+response.downloadLink.replace('/v1.0', '')
-		} else {
-			this.errMessage = response.message || 'Server Error'
+	/**
+	 * Connect to the websocket.
+	 * @return {Promise}
+	 */
+	ensureWebSocket () {
+		return new Promise((resolve, reject) => {
+			let ws = this.websocket
+
+			if (ws && ws.readyState===ws.OPEN) {
+				resolve()
+			} else if (ws && ws.readyState===ws.CONNECTING) {
+				// wait a while
+				// do nothing, wait for onopen callback
+			} else {
+				console.log("Create a new socket")
+				// create the websocket
+				ws = this.websocket = new WebSocket(window.CONFS.wsServer+"/opencc")
+				ws.binaryType = "arraybuffer"
+
+				ws.onopen = (evt) => {console.log("ws open", evt); resolve()}
+				ws.onclose = (evt) => {this.onWsClose(evt)}
+				ws.onmessage = (evt) => {this.onWsMessage(evt)}
+				ws.onerror = (evt) => {this.onWsError(evt)}
+			}
+		})
+	}
+
+	/**
+	 * When the ajax already uploads the file,
+	 * we tell server side to start converting by websocket protocol.
+	 *
+	 * @return {Promise}
+	 */
+	notifyServerShouldConvert () {
+		var file = this.file
+
+		return this.ensureWebSocket()
+			.then(() => {
+				// tell the server the file alreadt transferred
+				this.websocket.send(JSON.stringify({
+					action: "DO_CONVERT_FILE",
+					name: file.name
+				}))
+				this.isProcessing = true
+			})
+	}
+
+	onWsOpen (evt) {
+		console.log('onWsOpen', evt)
+	}
+	onWsClose (evt) {
+		console.log('onWsClose', evt)
+	}
+	onWsMessage (evt) {
+		console.log('onWsMessage', evt)
+
+		let evtdata = JSON.parse(evt.data)
+
+		if (evtdata.action==="START_CONVERTING") {
+			this.isProcessing = true
 		}
+		else if (evtdata.action==="FINISHED_CONVERT") {
+			// find out that file
+			this.isProcessing = false
+			this.downloadLink = window.CONFS.apiServer+evtdata.downloadLink.replace('/v1.0', '')
+		} else if (evtdata.action==="CONVERT_PROGRESS") {
+			this.convertProgress = evtdata.percent
+		}
+
+		return false
+	}
+	onWsError (evt) {
+		console.log('onWsError', evt)
+		this.errMessage = ""+evt
 	}
 }
 
